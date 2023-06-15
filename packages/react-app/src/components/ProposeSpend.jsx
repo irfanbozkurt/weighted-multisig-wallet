@@ -1,18 +1,10 @@
-import { Button, Input, Spin } from "antd";
+import { Button, Spin } from "antd";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { AddressInput, EtherInput } from "../components";
+import { AddressInput, EtherInput } from ".";
 import { useLocalStorage } from "../hooks";
 
-export default function ProposeSpend({
-  walletContractName,
-  tokenBalance,
-  quorumPerMillion,
-  address,
-  mainnetProvider,
-  price,
-  readContracts,
-}) {
+export default function ProposeSpend({ quorumPerMillion, mainnetProvider, price }) {
   const history = useHistory();
 
   const [, setMethodName] = useLocalStorage("createTx", "");
@@ -79,7 +71,7 @@ export default function ProposeSpend({
               setCustomAmount();
 
               setTimeout(() => {
-                history.push("/create");
+                history.push("/transactions");
               }, 777);
             }}
           >

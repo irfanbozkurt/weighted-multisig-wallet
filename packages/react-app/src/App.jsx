@@ -1,31 +1,29 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Switch, Route, Link, useLocation } from "react-router-dom";
-import "antd/dist/antd.css";
-import { StaticJsonRpcProvider, JsonRpcProvider, Web3Provider, InfuraProvider } from "@ethersproject/providers";
-import "./App.css";
-import { Row, Col, Button, Menu, Alert, Switch as SwitchD } from "antd";
-import Web3Modal from "web3modal";
+import { JsonRpcProvider, StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
+import { formatEther, parseEther } from "@ethersproject/units";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { Alert, Button, Col, Menu, Row } from "antd";
+import "antd/dist/antd.css";
 import { useUserAddress } from "eth-hooks";
-import { Balance, Header, Account, Faucet, Ramp, Contract, GasGauge, Address, ThemeSwitch } from "./components";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, Route, Switch, useLocation } from "react-router-dom";
+import Web3Modal from "web3modal";
+import "./App.css";
+import { Account, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
+import { Transactor } from "./helpers";
 import {
-  useExchangePrice,
-  useGasPrice,
-  useUserProvider,
+  useBalance,
   useContractLoader,
   useContractReader,
   useEventListener,
-  useBalance,
+  useExchangePrice,
   useExternalContractLoader,
+  useGasPrice,
   useOnBlock,
+  useUserProvider,
 } from "./hooks";
-import { Transactor } from "./helpers";
-import { formatEther, parseEther } from "@ethersproject/units";
 //import Hints from "./Hints";
-import { Hints, ExampleUI, Subgraph } from "./views";
-import { useThemeSwitcher } from "react-css-theme-switcher";
-import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants";
-import { CreateTransaction, Transactions, Transfer, FrontPage } from "./views";
+import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
+import { CreateTransaction, FrontPage, Subgraph } from "./views";
 
 /*
     Welcome to 🏗 scaffold-eth !
@@ -117,7 +115,7 @@ function App(props) {
   const tokenContractName = "WalletGovToken";
 
   //📟 Listen for ownership events
-  const signerUpdateEvents = useEventListener(readContracts, tokenContractName, "SignerUpdate", localProvider, 1);
+  const tokenTransferEvents = useEventListener(readContracts, tokenContractName, "Transfer", localProvider, 1);
 
   //📟 Listen for broadcast events
   const executeTransactionEvents = useEventListener(
@@ -250,11 +248,8 @@ function App(props) {
         <Menu.Item key="/">
           <Link to="/">Home</Link>
         </Menu.Item>
-        <Menu.Item key="/create">
-          <Link to="/create">Create Proposal</Link>
-        </Menu.Item>
-        <Menu.Item key="/pool">
-          <Link to="/pool">Pool</Link>
+        <Menu.Item key="/transactions">
+          <Link to="/transactions">Transactions</Link>
         </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug</Link>
@@ -266,12 +261,13 @@ function App(props) {
           <FrontPage
             executeTransactionEvents={executeTransactionEvents}
             userAddress={address}
-            signerUpdateEvents={signerUpdateEvents}
+            tokenTransferEvents={tokenTransferEvents}
             walletContractName={walletContractName}
             tokenContractName={tokenContractName}
             localProvider={localProvider}
             readContracts={readContracts}
             price={price}
+            tx={tx}
             mainnetProvider={mainnetProvider}
             blockExplorer={blockExplorer}
             writeContracts={writeContracts}
@@ -280,13 +276,16 @@ function App(props) {
             quorumPerMillion={quorumPerMillion}
           />
         </Route>
-        <Route path="/create">
+        <Route path="/transactions">
           <CreateTransaction
             poolServerUrl={poolServerUrl}
             walletContractName={walletContractName}
+            quorumPerMillion={quorumPerMillion}
+            blockExplorer={blockExplorer}
             address={address}
             userProvider={userProvider}
             mainnetProvider={mainnetProvider}
+            nonce={nonce}
             tokenContractName={tokenContractName}
             localProvider={localProvider}
             yourLocalBalance={yourLocalBalance}
@@ -294,24 +293,6 @@ function App(props) {
             tx={tx}
             writeContracts={writeContracts}
             readContracts={readContracts}
-          />
-        </Route>
-        <Route path="/pool">
-          <Transactions
-            poolServerUrl={poolServerUrl}
-            walletContractName={walletContractName}
-            address={address}
-            userProvider={userProvider}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
-            tx={tx}
-            writeContracts={writeContracts}
-            readContracts={readContracts}
-            blockExplorer={blockExplorer}
-            nonce={nonce}
-            quorumPerMillion={quorumPerMillion}
           />
         </Route>
         <Route path="/debug">

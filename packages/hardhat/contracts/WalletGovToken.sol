@@ -2,75 +2,40 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract WalletGovToken is ERC20, Ownable {
-    event SignerUpdate(
-        address registrarAddress,
-        uint256 registrarNewWeight,
-        address recipientAddress,
-        uint256 recipientWeight,
-        uint256 amount,
-        uint256 timestamp
-    );
+contract WalletGovToken is ERC20 {
+    address walletContract;
 
-    constructor(uint256 _totalSupply) ERC20("WalletGovToken", "WGT") {
-        super._mint(msg.sender, _totalSupply);
+    constructor(
+        uint256 _totalSupply,
+        address toMint
+    ) ERC20("WalletGovToken", "WGT") {
+        walletContract = msg.sender;
+        super._mint(toMint, _totalSupply);
+    }
+
+    function transfer(
+        address to,
+        uint256 amount
+    ) public virtual override returns (bool) {
+        require(
+            to != walletContract,
+            "Cannot send funds to the wallet contract"
+        );
+        require(to != address(0), "Cannot send funds to zero address");
+        return super.transfer(to, amount);
     }
 
     function transferFrom(
         address from,
         address to,
         uint256 amount
-    ) public override onlyOwner returns (bool) {
-        require(to != owner(), "Cannot send funds to the wallet contract");
-        bool retVal = super.transferFrom(from, to, amount);
-        emit SignerUpdate(
-            from,
-            this.balanceOf(from),
-            to,
-            this.balanceOf(to),
-            amount,
-            block.timestamp
-        );
-        return retVal;
-    }
-
-    bool transferCalled;
-
-    // Allowed to be called only once for setup purposes.
-    function transfer(
-        address to,
-        uint256 amount
-    ) public override onlyOwner returns (bool) {
-        if (!transferCalled) {
-            transferCalled = true;
-            return super.transfer(to, amount);
-        } else revert("WalletGovToken does not support direct transfers.");
-    }
-
-    // Approvals can only be given to the MultiSig wallet. Should only be used when
-    // proposing a new member.
-    function allowance(
-        address from,
-        address
-    ) public view virtual override returns (uint256) {
-        return super.allowance(from, owner());
-    }
-
-    function allowance() public view virtual returns (uint256) {
-        return super.allowance(msg.sender, owner());
-    }
-
-    function approve(
-        address,
-        uint256 amount
     ) public virtual override returns (bool) {
-        return this.approve(amount);
-    }
-
-    function approve(uint256 amount) public virtual returns (bool) {
-        _approve(msg.sender, owner(), amount);
-        return true;
+        require(
+            to != walletContract,
+            "Cannot send funds to the wallet contract"
+        );
+        require(to != address(0), "Cannot send funds to zero address");
+        return super.transferFrom(from, to, amount);
     }
 }

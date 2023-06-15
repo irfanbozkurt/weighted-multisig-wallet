@@ -3,13 +3,13 @@ import { Button, List, Spin } from "antd";
 import { ethers } from "ethers";
 import React, { useState } from "react";
 import { TransactionListItem } from "../components";
-import { usePoller } from "../hooks";
+import { useLocalStorage, usePoller } from "../hooks";
 
 const axios = require("axios");
 
 const DEBUG = false;
 
-export default function Transactions({
+export default function Pool({
   poolServerUrl,
   walletContractName,
   quorumPerMillion,
@@ -25,7 +25,9 @@ export default function Transactions({
   writeContracts,
   blockExplorer,
 }) {
-  const [transactions, setTransactions] = useState();
+  const [txInPool, setTxInPool] = useState();
+  const [govTokenBalances] = useLocalStorage("govTokenBalances");
+
   usePoller(() => {
     const getTransactions = async () => {
       if (true) console.log("🛰 Requesting Transaction List");
@@ -51,7 +53,7 @@ export default function Transactions({
           newTransactions.push(update);
         }
       }
-      setTransactions(newTransactions);
+      setTxInPool(newTransactions);
       console.log("Loaded", newTransactions.length);
     };
     if (readContracts) getTransactions();
@@ -72,8 +74,6 @@ export default function Transactions({
       return ethers.BigNumber.from(a.signer).sub(ethers.BigNumber.from(b.signer));
     });
 
-    console.log("SORTED SIG LIST:", sigList);
-
     const finalSigList = [];
     const finalSigners = [];
     const used = {};
@@ -93,22 +93,23 @@ export default function Transactions({
     return <Spin />;
   }
 
-  console.log("transactions", transactions);
+  console.log("transactions", txInPool);
 
   return (
     <div style={{ maxWidth: 750, margin: "auto", marginTop: 32, marginBottom: 32 }}>
       <h1>
-        <b style={{ padding: 16 }}>#{nonce ? nonce.toNumber() : <Spin />}</b>
+        <b style={{ padding: 16 }}>Live Proposal Pool</b>
       </h1>
 
       <List
         bordered
-        dataSource={transactions}
+        dataSource={txInPool}
         renderItem={item => {
           console.log("ITE88888M", item);
 
           const hasSigned = item.signers.indexOf(address) >= 0;
-          const hasEnoughSignatures = item.signatures.length <= quorumPerMillion.toNumber();
+          const collectedWeight = item.signers.reduce((acc, addr) => acc + parseInt(govTokenBalances[addr] || 0), 0);
+          const hasEnoughSignatures = collectedWeight <= quorumPerMillion.toNumber();
 
           return (
             <TransactionListItem
@@ -120,9 +121,10 @@ export default function Transactions({
               walletContractName={walletContractName}
             >
               <span>
-                {item.signatures.length}/{quorumPerMillion.toNumber()} {hasSigned ? "✅" : ""}
+                {collectedWeight}/{quorumPerMillion.toNumber()}
               </span>
               <Button
+                disabled={hasSigned}
                 onClick={async () => {
                   console.log("item.signatures", item.signatures);
 
@@ -147,7 +149,7 @@ export default function Transactions({
                       [...item.signatures, signature],
                       newHash,
                     );
-                    const res = await axios.post(poolServerUrl, {
+                    await axios.post(poolServerUrl, {
                       ...item,
                       signatures: finalSigList,
                       signers: finalSigners,
@@ -156,7 +158,7 @@ export default function Transactions({
                 }}
                 type="secondary"
               >
-                Sign
+                {hasSigned ? "Signed" : "Sign"}
               </Button>
               <Button
                 key={item.hash}

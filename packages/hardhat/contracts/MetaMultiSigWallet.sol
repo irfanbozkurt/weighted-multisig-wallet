@@ -26,7 +26,7 @@ contract MetaMultiSigWallet {
     uint256 public constant govTokenSupply = 1000000;
 
     modifier onlySelf() {
-        // require(msg.sender == address(this), "Not Self");
+        require(msg.sender == address(this), "Not Self");
         _;
     }
 
@@ -40,24 +40,8 @@ contract MetaMultiSigWallet {
             "constructor: must be non-zero sigs required"
         );
         quorumPerMillion = _quorumPerMillion;
-
         chainId = _chainId;
-
-        govToken = new WalletGovToken(govTokenSupply);
-        govToken.transfer(msg.sender, govTokenSupply);
-    }
-
-    function transferWeight(
-        address ref,
-        address recipient,
-        uint256 givenSupply
-    ) public payable onlySelf {
-        require(recipient != address(0), "transferWeight: zero address");
-        require(
-            givenSupply > 0,
-            "You must give at least 1 governance tokens to the newcomer."
-        );
-        govToken.transferFrom(ref, recipient, givenSupply);
+        govToken = new WalletGovToken(govTokenSupply, msg.sender);
     }
 
     function updateQuorumPerMillion(

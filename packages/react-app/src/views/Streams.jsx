@@ -307,7 +307,7 @@ export default function Streams({
               setAmount("0");
               setTo(readContracts[walletContractName].address);
               setTimeout(() => {
-                history.push("/create");
+                history.push("/transactions");
               }, 777);
             }}
           >

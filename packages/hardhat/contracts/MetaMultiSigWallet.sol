@@ -47,17 +47,17 @@ contract MetaMultiSigWallet {
         govToken.transfer(msg.sender, govTokenSupply);
     }
 
-    function transferFrom(
+    function transferWeight(
         address ref,
-        address newSigner,
+        address recipient,
         uint256 givenSupply
     ) public payable onlySelf {
-        require(newSigner != address(0), "transferFrom: zero address");
+        require(recipient != address(0), "transferWeight: zero address");
         require(
             givenSupply > 0,
             "You must give at least 1 governance tokens to the newcomer."
         );
-        govToken.transferFrom(ref, newSigner, givenSupply);
+        govToken.transferFrom(ref, recipient, givenSupply);
     }
 
     function updateQuorumPerMillion(

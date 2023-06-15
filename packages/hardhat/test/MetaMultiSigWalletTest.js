@@ -53,13 +53,13 @@ describe("MetaMultiSigWallet Test", () => {
 
   // describe("Testing MetaMultiSigWallet functionality", () => {
   //   it("Adding a new signer", async () => {
-  //     let newSigner = addr1.address;
+  //     let recipient = addr1.address;
 
   //     let nonce = await metaMultiSigWallet.nonce();
   //     let to = metaMultiSigWallet.address;
   //     let value = 0;
 
-  //     let callData = metaMultiSigWallet.interface.encodeFunctionData("transferFrom",[newSigner]);
+  //     let callData = metaMultiSigWallet.interface.encodeFunctionData("transferFrom",[recipient]);
 
   //     let hash = await metaMultiSigWallet.getTransactionHash(nonce, to, value, callData);
 
@@ -70,7 +70,7 @@ describe("MetaMultiSigWallet Test", () => {
 
   //     await metaMultiSigWallet.executeTransaction(metaMultiSigWallet.address, value, callData, [signature]);
 
-  //     expect(await metaMultiSigWallet.hasWeight(newSigner)).to.equal(true);
+  //     expect(await metaMultiSigWallet.hasWeight(recipient)).to.equal(true);
   //   });
 
   //   it("Update Signatures Required to 2 - locking all the funds in the wallet, becasuse there is only 1 signer", async () => {

@@ -8,8 +8,9 @@ contract WalletGovToken is ERC20, Ownable {
     event SignerUpdate(
         address registrarAddress,
         uint256 registrarNewWeight,
-        address newSignerAddress,
-        uint256 newSignerWeight,
+        address recipientAddress,
+        uint256 recipientWeight,
+        uint256 amount,
         uint256 timestamp
     );
 
@@ -22,12 +23,14 @@ contract WalletGovToken is ERC20, Ownable {
         address to,
         uint256 amount
     ) public override onlyOwner returns (bool) {
+        require(to != owner(), "Cannot send funds to the wallet contract");
         bool retVal = super.transferFrom(from, to, amount);
         emit SignerUpdate(
             from,
             this.balanceOf(from),
             to,
             this.balanceOf(to),
+            amount,
             block.timestamp
         );
         return retVal;

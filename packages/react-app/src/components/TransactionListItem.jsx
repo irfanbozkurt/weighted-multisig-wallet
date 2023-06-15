@@ -4,6 +4,8 @@ import { Button, List } from "antd";
 import { Address, Balance, Blockie, TransactionDetailsModal } from "../components";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { parseEther, formatEther } from "@ethersproject/units";
+import { Typography, Skeleton } from "antd";
+const { Text } = Typography;
 
 const TransactionListItem = function ({
   item,
@@ -47,6 +49,7 @@ const TransactionListItem = function ({
   } catch (error) {
     console.log("ERROR", error);
   }
+
   return (
     <>
       <TransactionDetailsModal
@@ -70,19 +73,9 @@ const TransactionListItem = function ({
               justifyContent: "space-between",
             }}
           >
-            <p>
-              <b>Event Name :&nbsp;</b>
-              {txnData.functionFragment.name}&nbsp;
-            </p>
-            <p>
-              <b>Addressed to :&nbsp;</b>
-              {txnData.args[0]}
-            </p>
+            <p>{item.hash}&nbsp;</p>
           </div>
           {<b style={{ padding: 16 }}>#{typeof item.nonce === "number" ? item.nonce : item.nonce.toNumber()}</b>}
-          <span>
-            <Blockie size={4} scale={8} address={item.hash} /> {item.hash.substr(0, 6)}
-          </span>
           <Address address={item.to} ensProvider={mainnetProvider} blockExplorer={blockExplorer} fontSize={16} />
           <Balance
             balance={item.value ? item.value : parseEther("" + parseFloat(item.amount).toFixed(12))}

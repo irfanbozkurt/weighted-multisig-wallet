@@ -70,13 +70,11 @@ export default function EtherInput(props) {
     addonAfter = option("ETH 🔀");
   }
 
-  useEffect(
-    ()=>{
-      if(!currentValue){
-        setDisplay("");
-      }
+  useEffect(() => {
+    if (!currentValue) {
+      setDisplay("");
     }
-  ,[ currentValue ])
+  }, [currentValue]);
 
   return (
     <Input
@@ -84,19 +82,20 @@ export default function EtherInput(props) {
       autoFocus={props.autoFocus}
       prefix={prefix}
       value={display}
+      disabled={props.disabled}
       addonAfter={addonAfter}
       onChange={async e => {
         const newValue = e.target.value;
         if (mode === "USD") {
-          const possibleNewValue = parseFloat(newValue)
-          if(possibleNewValue){
+          const possibleNewValue = parseFloat(newValue);
+          if (possibleNewValue) {
             const ethValue = possibleNewValue / props.price;
             setValue(ethValue);
             if (typeof props.onChange === "function") {
               props.onChange(ethValue);
             }
             setDisplay(newValue);
-          }else{
+          } else {
             setDisplay(newValue);
           }
         } else {

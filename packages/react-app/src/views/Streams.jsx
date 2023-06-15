@@ -1,27 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import {
-  notification,
-  InputNumber,
-  Select,
-  Button,
-  List,
-  Divider,
-  Input,
-  Card,
-  DatePicker,
-  Slider,
-  Switch,
-  Progress,
-  Spin,
-} from "antd";
-import { SyncOutlined } from "@ant-design/icons";
-import { Address, AddressInput, Balance, Blockie, EtherInput } from "../components";
-import { parseEther, formatEther } from "@ethersproject/units";
-import { ethers } from "ethers";
-import { useContractReader, useEventListener, useLocalStorage, useBalance } from "../hooks";
+import { formatEther, parseEther } from "@ethersproject/units";
+import { Button, Input, InputNumber, List, Select, notification } from "antd";
 import { useBlockNumber } from "eth-hooks";
-const axios = require("axios");
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Address, AddressInput, Balance, EtherInput } from "../components";
+import { useBalance, useLocalStorage } from "../hooks";
 const { Option } = Select;
 
 const DEBUG = false;
@@ -30,13 +13,9 @@ export default function Streams({
   withdrawStreamEvents,
   openStreamEvents,
   walletContractName,
-  quorumPerMillion,
   address,
-  nonce,
-  userProvider,
   mainnetProvider,
   localProvider,
-  yourLocalBalance,
   price,
   tx,
   readContracts,

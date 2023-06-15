@@ -1,3 +1,9 @@
+Proposals:
+
+- ERC20 -> ERC20Votes?
+- Partial sign
+  bytes32 \_hash = getTransactionHash(nonce, \_receiver, \_value, \_calldata, /_ here _/);
+
 # 🏗 scaffold-eth | 🏰 BuidlGuidl
 
 ## 🚩 Challenge 5 - Multisig 👛

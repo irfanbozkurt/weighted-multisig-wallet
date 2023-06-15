@@ -25,7 +25,7 @@ import { formatEther, parseEther } from "@ethersproject/units";
 import { Hints, ExampleUI, Subgraph } from "./views";
 import { useThemeSwitcher } from "react-css-theme-switcher";
 import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants";
-import { CreateTransaction, Transactions, Senate, FrontPage } from "./views";
+import { CreateTransaction, Transactions, Transfer, FrontPage } from "./views";
 
 /*
     Welcome to 🏗 scaffold-eth !
@@ -132,6 +132,8 @@ function App(props) {
   // keep track of a variable from the contract in the local React state:
   const hasWeight = useContractReader(writeContracts, walletContractName, "hasWeight", []);
   if (DEBUG) console.log("🤗 hasWeight (" + address + "):", hasWeight);
+
+  const tokenBalance = useContractReader(writeContracts, tokenContractName, "balanceOf", [address]);
 
   // keep track of a variable from the contract in the local React state:
   const nonce = useContractReader(readContracts, walletContractName, "nonce");
@@ -246,13 +248,10 @@ function App(props) {
       {networkDisplay}
       <Menu style={{ textAlign: "center" }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
-          <Link to="/">MultiSig</Link>
-        </Menu.Item>
-        <Menu.Item key="/senate">
-          <Link to="/senate">Senate</Link>
+          <Link to="/">Home</Link>
         </Menu.Item>
         <Menu.Item key="/create">
-          <Link to="/create">Create</Link>
+          <Link to="/create">Create Proposal</Link>
         </Menu.Item>
         <Menu.Item key="/pool">
           <Link to="/pool">Pool</Link>
@@ -266,43 +265,18 @@ function App(props) {
         <Route exact path="/">
           <FrontPage
             executeTransactionEvents={executeTransactionEvents}
+            userAddress={address}
             signerUpdateEvents={signerUpdateEvents}
             walletContractName={walletContractName}
+            tokenContractName={tokenContractName}
             localProvider={localProvider}
             readContracts={readContracts}
             price={price}
             mainnetProvider={mainnetProvider}
             blockExplorer={blockExplorer}
-          />
-        </Route>
-
-        {/* Uncomment to display and interact with an external contract (DAI on mainnet):
-            <Contract
-              name="DAI"
-              customContract={mainnetDAIContract}
-              signer={userProvider.getSigner()}
-              provider={mainnetProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-            />
-            */}
-
-        <Route exact path="/SigWeight"></Route>
-        <Route exact path="/senate">
-          <Senate
-            walletContractName={walletContractName}
-            address={address}
-            userProvider={userProvider}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
-            tx={tx}
             writeContracts={writeContracts}
-            readContracts={readContracts}
-            blockExplorer={blockExplorer}
-            nonce={nonce}
-            ownerEvents={ownerEvents}
+            address={address}
+            tokenBalance={tokenBalance}
             quorumPerMillion={quorumPerMillion}
           />
         </Route>
@@ -313,6 +287,7 @@ function App(props) {
             address={address}
             userProvider={userProvider}
             mainnetProvider={mainnetProvider}
+            tokenContractName={tokenContractName}
             localProvider={localProvider}
             yourLocalBalance={yourLocalBalance}
             price={price}

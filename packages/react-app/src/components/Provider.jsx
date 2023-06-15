@@ -29,9 +29,9 @@ export default function Provider(props) {
         setStatus("processing");
       }
       try {
-        const newSigner = await props.provider.getSigner();
-        setSigner(newSigner);
-        const newAddress = await newSigner.getAddress();
+        const recipient = await props.provider.getSigner();
+        setSigner(recipient);
+        const newAddress = await recipient.getAddress();
         setAddress(newAddress);
         // eslint-disable-next-line no-empty
       } catch (e) {}

@@ -166,11 +166,6 @@ export default function Transactions({
     ).then(entries => setExecutors(entries.filter(([addr, isExecutor]) => isExecutor).map(([addr]) => addr)));
   }, [executorEvents]);
 
-  console.log("zürten");
-  console.log(executorEvents);
-  console.log(possibleExecutors);
-  console.log(executors);
-
   return (
     <div
       style={{

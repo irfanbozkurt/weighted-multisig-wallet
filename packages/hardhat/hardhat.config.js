@@ -52,6 +52,12 @@ module.exports = {
         (you can put in a mnemonic here to set the deployer locally)
       */
     },
+    sepolia: {
+      url: "https://sepolia.infura.io/v3/ec6a8acd1d354717acec099ad46a0bab",
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+    },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/568af3da01a043ecb2ac80bf69927b38", //<---- YOUR INFURA ID! (or it won't work)
       accounts: {

@@ -312,7 +312,6 @@ export const NETWORKS = {
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
     blockExplorer: "https://etherscan.io/",
   },
-
   sepolia: {
     name: "sepolia",
     color: "#0975F6",

@@ -2,7 +2,7 @@ import { parseEther } from "@ethersproject/units";
 import { Button, List, Spin } from "antd";
 import { ethers } from "ethers";
 import React, { useState } from "react";
-import { TransactionListItem } from "../components";
+import { TransactionListItem } from ".";
 import { useLocalStorage, usePoller } from "../hooks";
 
 const axios = require("axios");
@@ -14,6 +14,7 @@ export default function Pool({
   walletContractName,
   quorumPerMillion,
   address,
+  userIsExecutor,
   nonce,
   userProvider,
   mainnetProvider,
@@ -96,12 +97,16 @@ export default function Pool({
   console.log("transactions", txInPool);
 
   return (
-    <div style={{ maxWidth: 750, margin: "auto", marginTop: 32, marginBottom: 32 }}>
+    <div style={{ width: "100%", paddingRight: 32, paddingLeft: 32 }}>
       <h1>
         <b style={{ padding: 16 }}>Live Proposal Pool</b>
       </h1>
 
       <List
+        style={{
+          maxHeight: "400px",
+          overflow: "scroll",
+        }}
         bordered
         dataSource={txInPool}
         renderItem={item => {
@@ -162,6 +167,7 @@ export default function Pool({
               </Button>
               <Button
                 key={item.hash}
+                disabled={!userIsExecutor}
                 onClick={async () => {
                   const newHash = await writeContracts[walletContractName].getTransactionHash(
                     item.nonce,
@@ -184,7 +190,7 @@ export default function Pool({
                 }}
                 type={hasEnoughSignatures ? "primary" : "secondary"}
               >
-                Exec
+                {userIsExecutor ? "Exec" : "Can't Exec"}
               </Button>
             </TransactionListItem>
           );

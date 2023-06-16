@@ -1,15 +1,16 @@
 import { Button, Input } from "antd";
 import React, { useState } from "react";
 import { useLocalStorage } from "../hooks";
+import AddressInput from "./AddressInput";
 
-export default function ProposeThresholdChange({ walletContractName, readContracts }) {
+export default function ProposeAddExecutor({ mainnetProvider, walletContractName, readContracts }) {
+  const [newExecutor, setNewExecutor] = useState("");
+
   const [, setMethodName] = useLocalStorage("createTx", "");
   const [, setCreateTxMethodNameDisabled] = useLocalStorage("createTxMethodNameDisabled");
 
   const [, setTo] = useLocalStorage("to");
   const [, setToDisabled] = useLocalStorage("toDisabled");
-
-  const [customAmount, setCustomAmount] = useState(0);
 
   const [, setAmount] = useLocalStorage("createTxAmount");
   const [, setCreateTxAmountDisabled] = useLocalStorage("createTxAmountDisabled", false);
@@ -20,31 +21,32 @@ export default function ProposeThresholdChange({ walletContractName, readContrac
   return (
     <div
       style={{
-        padding: 10,
+        width: "100%",
+        margin: "auto",
+        paddingBottom: 10,
       }}
     >
       <div style={{ margin: 8, display: "flex", justifyContent: "space-between" }}>
         <div style={{ width: "100%", paddingRight: 10 }}>
-          <Input
-            type="number"
-            min={1}
-            max={1000000}
-            value={customAmount}
-            onChange={e => setCustomAmount(e.target.value)}
+          <AddressInput
+            autoFocus
+            ensProvider={mainnetProvider}
+            placeholder="New executor"
+            value={newExecutor}
+            onChange={setNewExecutor}
           />
         </div>
 
         <div>
           <Button
             onClick={async () => {
-              const calldata = readContracts[walletContractName].interface.encodeFunctionData(
-                "updateQuorumPerMillion",
-                [parseInt(customAmount)],
-              );
+              const calldata = readContracts[walletContractName].interface.encodeFunctionData("addExecutor", [
+                newExecutor,
+              ]);
               setData(calldata);
               setDataDisabled(true);
 
-              setMethodName("updateQuorumPerMillion(uint256)");
+              setMethodName("addExecutor(address)");
               setCreateTxMethodNameDisabled(true);
 
               setTo(readContracts[walletContractName].address);
@@ -52,12 +54,11 @@ export default function ProposeThresholdChange({ walletContractName, readContrac
 
               setAmount(0);
               setCreateTxAmountDisabled(true);
-              setCustomAmount(0);
 
               window.location.reload(true);
             }}
           >
-            Propose new weight threshold
+            Propose new executor
           </Button>
         </div>
       </div>

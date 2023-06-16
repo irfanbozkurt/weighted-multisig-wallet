@@ -23,7 +23,7 @@ import {
 } from "./hooks";
 //import Hints from "./Hints";
 import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
-import { CreateTransaction, FrontPage, Subgraph } from "./views";
+import { Transactions, Home } from "./views";
 
 /*
     Welcome to 🏗 scaffold-eth !
@@ -117,6 +117,8 @@ function App(props) {
   //📟 Listen for ownership events
   const tokenTransferEvents = useEventListener(readContracts, tokenContractName, "Transfer", localProvider, 1);
 
+  const executorEvents = useEventListener(readContracts, walletContractName, "Executor", localProvider, 1);
+
   //📟 Listen for broadcast events
   const executeTransactionEvents = useEventListener(
     readContracts,
@@ -132,6 +134,8 @@ function App(props) {
   if (DEBUG) console.log("🤗 hasWeight (" + address + "):", hasWeight);
 
   const tokenBalance = useContractReader(writeContracts, tokenContractName, "balanceOf", [address]);
+
+  const userIsExecutor = useContractReader(readContracts, walletContractName, "executors", [address]);
 
   // keep track of a variable from the contract in the local React state:
   const nonce = useContractReader(readContracts, walletContractName, "nonce");
@@ -258,7 +262,7 @@ function App(props) {
 
       <Switch>
         <Route exact path="/">
-          <FrontPage
+          <Home
             executeTransactionEvents={executeTransactionEvents}
             userAddress={address}
             tokenTransferEvents={tokenTransferEvents}
@@ -277,7 +281,8 @@ function App(props) {
           />
         </Route>
         <Route path="/transactions">
-          <CreateTransaction
+          <Transactions
+            executorEvents={executorEvents}
             poolServerUrl={poolServerUrl}
             walletContractName={walletContractName}
             quorumPerMillion={quorumPerMillion}
@@ -286,6 +291,7 @@ function App(props) {
             userProvider={userProvider}
             mainnetProvider={mainnetProvider}
             nonce={nonce}
+            userIsExecutor={userIsExecutor}
             tokenContractName={tokenContractName}
             localProvider={localProvider}
             yourLocalBalance={yourLocalBalance}
@@ -321,14 +327,6 @@ function App(props) {
             provider={mainnetProvider}
             address={address}
             blockExplorer={"https://etherscan.io/"}
-          />
-        </Route>
-        <Route path="/subgraph">
-          <Subgraph
-            subgraphUri={props.subgraphUri}
-            tx={tx}
-            writeContracts={writeContracts}
-            mainnetProvider={mainnetProvider}
           />
         </Route>
       </Switch>

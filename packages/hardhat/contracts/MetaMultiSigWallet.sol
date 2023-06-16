@@ -7,7 +7,7 @@ import "./WalletGovToken.sol";
 contract MetaMultiSigWallet {
     using ECDSA for bytes32;
 
-    event Deposit(address indexed sender, uint256 amount, uint256 balance);
+    event Executor(address executor);
     event ExecuteTransaction(
         address indexed owner,
         address payable to,
@@ -22,6 +22,9 @@ contract MetaMultiSigWallet {
     uint256 public nonce;
     uint256 public chainId;
 
+    mapping(address => bool) public executors;
+    uint256 public executorCount = 1;
+
     WalletGovToken public govToken;
     uint256 public constant govTokenSupply = 1000000;
 
@@ -30,9 +33,12 @@ contract MetaMultiSigWallet {
         _;
     }
 
-    receive() external payable {
-        emit Deposit(msg.sender, msg.value, address(this).balance);
+    modifier onlyExecutors() {
+        require(executors[msg.sender], "Not an executor");
+        _;
     }
+
+    receive() external payable {}
 
     constructor(uint256 _chainId, uint256 _quorumPerMillion) {
         require(
@@ -42,28 +48,20 @@ contract MetaMultiSigWallet {
         quorumPerMillion = _quorumPerMillion;
         chainId = _chainId;
         govToken = new WalletGovToken(govTokenSupply, msg.sender);
+        executors[msg.sender] = true;
+        emit Executor(msg.sender);
     }
 
-    function updateQuorumPerMillion(
-        uint256 newquorumPerMillion
-    ) public payable onlySelf {
-        require(
-            newquorumPerMillion > 0,
-            "updateQuorumPerMillion: must be non-zero sigs required"
-        );
-        quorumPerMillion = newquorumPerMillion;
-    }
-
-    function getMe() external view returns (address) {
-        return msg.sender;
-    }
+    /* 
+        Proposal execution functions
+    */
 
     function executeTransaction(
         address payable _receiver,
         uint256 _value,
         bytes memory _calldata,
         bytes[] memory signatures
-    ) public returns (bytes memory) {
+    ) external onlyExecutors returns (bytes memory) {
         require(hasWeight(), "executeTransaction: only owners can execute");
         bytes32 _hash = getTransactionHash(nonce, _receiver, _value, _calldata);
         nonce++;
@@ -133,6 +131,32 @@ contract MetaMultiSigWallet {
         return govToken.balanceOf(msg.sender) > 0;
     }
 
+    /* 
+        Wallet inner settings
+    */
+
+    function updateQuorumPerMillion(
+        uint256 newquorumPerMillion
+    ) external onlySelf {
+        require(
+            newquorumPerMillion > 0,
+            "updateQuorumPerMillion: must be non-zero sigs required"
+        );
+        quorumPerMillion = newquorumPerMillion;
+    }
+
+    function addExecutor(address newExecutor) external onlySelf {
+        executors[newExecutor] = true;
+        executorCount++;
+        emit Executor(newExecutor);
+    }
+
+    function removeExecutor(address oldExecutor) external onlySelf {
+        require(executorCount > 1, "Cannot remove the last executor.");
+        executors[oldExecutor] = false;
+        executorCount--;
+    }
+
     //  Streaming stuff
 
     // event OpenStream(address indexed to, uint256 amount, uint256 frequency);
@@ -177,7 +201,7 @@ contract MetaMultiSigWallet {
     //     address to,
     //     uint256 amount,
     //     uint256 frequency
-    // ) public onlySelf {
+    // ) external onlySelf {
     //     require(streams[to].amount == 0, "openStream: stream already open");
     //     require(amount > 0, "openStream: no amount");
     //     require(frequency > 0, "openStream: no frequency");

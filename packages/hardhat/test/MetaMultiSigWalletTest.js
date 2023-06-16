@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
-describe("MetaMultiSigWallet Test", () => {
+describe("WeightedMultiSigWallet Test", () => {
   let deployer;
   let addr1;
   let addr2;
@@ -23,7 +23,7 @@ describe("MetaMultiSigWallet Test", () => {
     provider = deployer.provider;
 
     metaMultiSigWallet = await (
-      await ethers.getContractFactory("MetaMultiSigWallet")
+      await ethers.getContractFactory("WeightedMultiSigWallet")
     ).deploy(CHAIN_ID, [deployer.address], signatureRequired, {
       value: ethers.utils.parseEther("0.01"),
     });
@@ -51,7 +51,7 @@ describe("MetaMultiSigWallet Test", () => {
     });
   });
 
-  // describe("Testing MetaMultiSigWallet functionality", () => {
+  // describe("Testing WeightedMultiSigWallet functionality", () => {
   //   it("Adding a new signer", async () => {
   //     let recipient = addr1.address;
 

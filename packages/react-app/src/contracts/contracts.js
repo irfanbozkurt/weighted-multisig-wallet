@@ -1,1 +1,1 @@
-module.exports = ["MetaMultiSigWallet","WalletGovToken"];
+module.exports = ["WalletGovToken","WeightedMultiSigWallet"];

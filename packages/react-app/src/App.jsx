@@ -111,7 +111,7 @@ function App(props) {
   // If you want to make 🔐 write transactions to your contracts, use the userProvider:
   const writeContracts = useContractLoader(userProvider);
 
-  const walletContractName = "MetaMultiSigWallet";
+  const walletContractName = "WeightedMultiSigWallet";
   const tokenContractName = "WalletGovToken";
 
   //📟 Listen for ownership events
@@ -310,7 +310,7 @@ function App(props) {
             blockExplorer={blockExplorer}
           />
           <Contract
-            name="MetaMultiSigWallet"
+            name="WeightedMultiSigWallet"
             signer={userProvider.getSigner()}
             provider={localProvider}
             address={address}

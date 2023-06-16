@@ -25,9 +25,9 @@ const main = async () => {
 
   console.log(`\n\n 📡 Deploying to ${targetNetwork}...\n`);
 
-  const metaMultiSigWallet = await deploy("MetaMultiSigWallet", [
+  const metaMultiSigWallet = await deploy("WeightedMultiSigWallet", [
     targetNetwork == "localhost" ? 31337 : 11155111, // Sepolia
-    650000,
+    666666,
   ]);
 
   const govTokenAddr = await metaMultiSigWallet.govToken();

@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./WalletGovToken.sol";
 
-contract MetaMultiSigWallet {
+contract WeightedMultiSigWallet {
     using ECDSA for bytes32;
 
     event Executor(address executor);
@@ -63,6 +63,7 @@ contract MetaMultiSigWallet {
         bytes[] memory signatures
     ) external onlyExecutors returns (bytes memory) {
         require(hasWeight(), "executeTransaction: only owners can execute");
+
         bytes32 _hash = getTransactionHash(nonce, _receiver, _value, _calldata);
         nonce++;
         uint256 totalWeight;
@@ -156,67 +157,4 @@ contract MetaMultiSigWallet {
         executors[oldExecutor] = false;
         executorCount--;
     }
-
-    //  Streaming stuff
-
-    // event OpenStream(address indexed to, uint256 amount, uint256 frequency);
-    // event CloseStream(address indexed to);
-    // event Withdraw(address indexed to, uint256 amount, string reason);
-
-    // struct Stream {
-    //     uint256 amount;
-    //     uint256 frequency;
-    //     uint256 last;
-    // }
-
-    // mapping(address => Stream) public streams;
-
-    // function streamWithdraw(uint256 amount, string memory reason) public {
-    //     require(streams[msg.sender].amount > 0, "withdraw: no open stream");
-    //     _streamWithdraw(payable(msg.sender), amount, reason);
-    // }
-
-    // function _streamWithdraw(
-    //     address payable to,
-    //     uint256 amount,
-    //     string memory reason
-    // ) private {
-    //     uint256 totalAmountCanWithdraw = streamBalance(to);
-    //     require(totalAmountCanWithdraw >= amount, "withdraw: not enough");
-    //     streams[to].last =
-    //         streams[to].last +
-    //         (((block.timestamp - streams[to].last) * amount) /
-    //             totalAmountCanWithdraw);
-    //     emit Withdraw(to, amount, reason);
-    //     to.transfer(amount);
-    // }
-
-    // function streamBalance(address to) public view returns (uint256) {
-    //     return
-    //         (streams[to].amount * (block.timestamp - streams[to].last)) /
-    //         streams[to].frequency;
-    // }
-
-    // function openStream(
-    //     address to,
-    //     uint256 amount,
-    //     uint256 frequency
-    // ) external onlySelf {
-    //     require(streams[to].amount == 0, "openStream: stream already open");
-    //     require(amount > 0, "openStream: no amount");
-    //     require(frequency > 0, "openStream: no frequency");
-
-    //     streams[to].amount = amount;
-    //     streams[to].frequency = frequency;
-    //     streams[to].last = block.timestamp;
-
-    //     emit OpenStream(to, amount, frequency);
-    // }
-
-    // function closeStream(address payable to) public onlySelf {
-    //     require(streams[to].amount > 0, "closeStream: stream already closed");
-    //     _streamWithdraw(to, streams[to].amount, "stream closed");
-    //     delete streams[to];
-    //     emit CloseStream(to);
-    // }
 }

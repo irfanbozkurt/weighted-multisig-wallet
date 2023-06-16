@@ -2,11 +2,11 @@
 
 Weighted MultiSig wallet deploys and uses a fixed supply of 1,000,000 ERC20 tokens representing **signature weight**, similar to how Decentralized Autonomous Organizations use a governance token to represent vote weight.
 
-Execution proposals are published to a back-end for other signers to see and interact with, and only the proposals acquiring weight more than a configurable threshold of the wallet can get executed (by default, 2/3 of all signing weight). Weight of a participant's signature will be determined by their **token balance** at the execution time.
+Execution proposals are published to a back-end for other signers to see and interact with, and only the proposals acquiring weight more than a configurable threshold (2/3 by default) can get executed. Weight of a participant's signature will be determined by their **token balance** at the execution time.
 
 While anyone holding at least 1 gov token can create proposals, only the **executors** can grab all signatures and actually execute a pending proposal. Initially the only executor will be the deployer, but new executors can be added through the voting mechanism.
 
-Weighted MultiSig Wallet provides pre-configured UI interfaces for Wallet governance and payment calls, but the users can craft a custom calldata and propose an entirely custom call to any CA or EOA. Inputed 'to', 'value' and '_calldata' will literally be **call{}()** ed by the wallet contract, given enough signature weight. Explore further all these interfaces in the online demo.
+Weighted MultiSig Wallet provides pre-configured UI interfaces for Wallet governance and payment calls, but users can craft custom calldata and propose entirely custom calls to any CA or EOA. Inputed 'to', 'value' and '_calldata' will literally be **call{}()** ed by the wallet contract, given enough signature weight. Explore further all these interfaces in the online demo.
 
 ### Demo on Sepolia : [weighted-multisig.surge.sh](https://weighted-multisig.surge.sh)
 

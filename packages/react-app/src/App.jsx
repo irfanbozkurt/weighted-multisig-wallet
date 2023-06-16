@@ -36,7 +36,7 @@ import { Transactions, Funds } from "./views";
 /// 📡 What chain are your contracts deployed to?
 const targetNetwork = NETWORKS["sepolia"];
 
-const poolServerUrl = "http://localhost:49832/";
+const poolServerUrl = "https://cloudy-moth-vest.cyclic.app/";
 
 const DEBUG = false;
 

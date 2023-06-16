@@ -7,14 +7,13 @@ const R = require("ramda");
 
 let targetNetwork = process.env.HARDHAT_NETWORK || config.defaultNetwork;
 
-let customSigner;
+let customSigner = new ethers.Wallet("PLACE_DEPLOYER_PK_HERE", ethers.provider);
 
 const main = async () => {
-  // FE account pk
-  customSigner = new ethers.Wallet(
-    "0x11377fe5556d9bf81c3d5f24b37b5fffdf2b4bb494b91bd70a9c11545c4bb016",
-    ethers.provider
-  );
+  if (!customSigner) {
+    console.error("Place deployer account at top");
+    return;
+  }
 
   await (
     await ethers.getSigners()

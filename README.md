@@ -19,7 +19,7 @@ While anyone connecting to the front-end can create proposals, only the **execut
 <br>
 <br>
 
-## 📡 Deploy the wallet!
+## 📡 Deployment
 
 🛰 Ready to deploy to a testnet?
 

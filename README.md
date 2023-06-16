@@ -6,7 +6,7 @@ Execution proposals are published to a back-end for other signers to see and int
 
 While anyone holding at least 1 gov token can create proposals, only the **executors** can grab all signatures and actually execute a pending proposal. Initially the only executor will be the deployer, but new executors can be added through the voting mechanism.
 
-Weighted MultiSig Wallet provides pre-configured UI interfaces for Wallet governance and payment calls, but the users can craft a custom calldata and propose an entirely custom call to any CA or EOA. Inputed 'to', 'value' and '_calldata' will literally be **call{}()**ed by the wallet contract, given enough signature weight. Explore further all these interfaces in the online demo.
+Weighted MultiSig Wallet provides pre-configured UI interfaces for Wallet governance and payment calls, but the users can craft a custom calldata and propose an entirely custom call to any CA or EOA. Inputed 'to', 'value' and '_calldata' will literally be **call{}()** ed by the wallet contract, given enough signature weight. Explore further all these interfaces in the online demo.
 
 ### Demo on Sepolia : [weighted-multisig.surge.sh](https://weighted-multisig.surge.sh)
 

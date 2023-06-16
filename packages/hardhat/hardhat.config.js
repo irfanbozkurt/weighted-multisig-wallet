@@ -2,7 +2,6 @@ const { utils } = require("ethers");
 const fs = require("fs");
 const chalk = require("chalk");
 
-require("@nomiclabs/hardhat-waffle");
 require("@tenderly/hardhat-tenderly");
 
 require("@nomiclabs/hardhat-etherscan");
@@ -21,7 +20,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "sepolia";
 
 function mnemonic() {
   try {
@@ -54,6 +53,7 @@ module.exports = {
     },
     sepolia: {
       url: "https://sepolia.infura.io/v3/ec6a8acd1d354717acec099ad46a0bab",
+      chainId: 11155111,
       accounts: {
         mnemonic: mnemonic(),
       },

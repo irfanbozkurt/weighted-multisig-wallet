@@ -6,7 +6,9 @@ const { utils } = require("ethers");
 const R = require("ramda");
 
 let targetNetwork = process.env.HARDHAT_NETWORK || config.defaultNetwork;
+
 let customSigner = new ethers.Wallet("PLACE_DEPLOYER_PK_HERE", ethers.provider);
+
 let QUORUM_PER_MILLION = 666666;
 let CHAIN_ID = targetNetwork == "localhost" ? 31337 : 11155111;
 
@@ -26,14 +28,24 @@ const main = async () => {
 
   console.log(`\n\n 📡 Deploying to ${targetNetwork}...\n`);
 
-  const metaMultiSigWallet = await deploy("WeightedMultiSigWallet", [
+  const weightedMultiSigWallet = await deploy("WeightedMultiSigWallet", [
     CHAIN_ID, // Sepolia
     QUORUM_PER_MILLION,
   ]);
-  const govTokenAddr = await metaMultiSigWallet.govToken();
+  const govTokenAddr = await weightedMultiSigWallet.govToken();
   fs.writeFileSync(`artifacts/WalletGovToken.address`, govTokenAddr);
 
   console.log(`Government token at: ${govTokenAddr}`);
+
+  if (targetNetwork !== "localhost") {
+    console.log(`\n\n 📡 Verifying contract...\n`);
+    await run("verify:verify", {
+      address: weightedMultiSigWallet.address,
+      contract: "contracts/WeightedMultiSigWallet.sol:WeightedMultiSigWallet",
+      constructorArguments: [CHAIN_ID, QUORUM_PER_MILLION],
+    });
+    console.log(`\n\n 📄 Contract verified.\n`);
+  }
 
   const govToken = await (
     await ethers.getContractFactory("WalletGovToken")

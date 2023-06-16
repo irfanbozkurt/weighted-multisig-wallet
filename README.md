@@ -8,13 +8,15 @@ While anyone connecting to the front-end can create proposals, only the **execut
 
 <br>
 
-### Demo :
+### Demo on Sepolia :
 
 <br>
 
-### [WeightedMultiSigWallet Contract](./packages/hardhat/contracts/WeightedMultiSigWallet.sol)
+### [WeightedMultiSigWallet Contract](./packages/hardhat/contracts/WeightedMultiSigWallet.sol) - [Etherscan](https://sepolia.etherscan.io/address/0x76D4E44335D50C4e74BB681708a62FE5862671E8)
 
 ### [WalletGovToken Contract](./packages/hardhat/contracts/WalletGovToken.sol)
+
+### [Etherscan link](https://sepolia.etherscan.io/address/0x76D4E44335D50C4e74BB681708a62FE5862671E8)
 
 <br>
 <br>

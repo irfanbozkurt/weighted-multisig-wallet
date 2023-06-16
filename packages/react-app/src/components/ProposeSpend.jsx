@@ -31,13 +31,9 @@ export default function ProposeSpend({ quorumPerMillion, mainnetProvider, price 
         width: 400,
         margin: "auto",
         padding: 10,
-        marginTop: 24,
       }}
     >
       <div style={{ margin: 8 }}>Propose a spending. Specify the target, and amount </div>
-      <div style={{ margin: 8 }}>
-        This proposal will require {quorumPerMillion ? quorumPerMillion.toNumber() : <Spin></Spin>} signature weight
-      </div>
       <div style={{ margin: 8 }}>
         <AddressInput
           autoFocus

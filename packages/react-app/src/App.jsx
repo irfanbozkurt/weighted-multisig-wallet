@@ -23,7 +23,7 @@ import {
 } from "./hooks";
 //import Hints from "./Hints";
 import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
-import { Transactions, Home } from "./views";
+import { Transactions, Funds } from "./views";
 
 /*
     Welcome to 🏗 scaffold-eth !
@@ -250,19 +250,19 @@ function App(props) {
       {networkDisplay}
       <Menu style={{ textAlign: "center" }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
-          <Link to="/">Home</Link>
+          <Link to="/">Funds</Link>
         </Menu.Item>
         <Menu.Item key="/transactions">
           <Link to="/transactions">Transactions</Link>
         </Menu.Item>
-        <Menu.Item key="/debug">
+        {/* <Menu.Item key="/debug">
           <Link to="/debug">Debug</Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
 
       <Switch>
         <Route exact path="/">
-          <Home
+          <Funds
             executeTransactionEvents={executeTransactionEvents}
             userAddress={address}
             tokenTransferEvents={tokenTransferEvents}
@@ -301,7 +301,7 @@ function App(props) {
             readContracts={readContracts}
           />
         </Route>
-        <Route path="/debug">
+        {/* <Route path="/debug">
           <Contract
             name="WalletGovToken"
             signer={userProvider.getSigner()}
@@ -318,7 +318,7 @@ function App(props) {
             purpose={purpose}
             setPurposeEvents={setPurposeEvents}
           />
-        </Route>
+        </Route> */}
         <Route path="/mainnetdai">
           <Contract
             name="DAI"

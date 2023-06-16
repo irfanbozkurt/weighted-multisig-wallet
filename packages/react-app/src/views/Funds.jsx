@@ -9,7 +9,7 @@ const axios = require("axios");
 
 const { Text } = Typography;
 
-export default function Home({
+export default function Funds({
   tokenBalance,
   quorumPerMillion,
   readContracts,
@@ -154,7 +154,7 @@ export default function Home({
           </span>
         </div>
         <div style={{ width: "95%", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
-          <div style={{ maxWidth: "90%", border: "1px solid rgb(50, 50, 50)", borderRadius: 10 }}>
+          <div style={{ width: "40%", border: "1px solid rgb(50, 50, 50)", borderRadius: 10 }}>
             <div style={{ padding: 5 }}>
               <Balance
                 address={readContracts ? readContracts[walletContractName].address : readContracts}
@@ -191,6 +191,33 @@ export default function Home({
             <List
               bordered
               dataSource={executeTransactionEvents.filter(event => event["data"] == "0x00")}
+              renderItem={item => (
+                <TransactionListItem
+                  item={item}
+                  mainnetProvider={mainnetProvider}
+                  blockExplorer={blockExplorer}
+                  price={price}
+                  readContracts={readContracts}
+                  walletContractName={walletContractName}
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        <div style={{ paddingTop: 32, width: "95%" }}>
+          <span style={{ verticalAlign: "middle", paddingLeft: 5, fontSize: 36, width: "100%" }}>
+            <Text>
+              <a style={{ color: "#ddd" }} target={"_blank"} rel="noopener noreferrer">
+                other executions
+              </a>
+            </Text>
+          </span>
+
+          <div style={{ maxHeight: "400px", overflow: "scroll" }}>
+            <List
+              bordered
+              dataSource={executeTransactionEvents.filter(event => event["data"] != "0x00")}
               renderItem={item => {
                 return (
                   <>
@@ -207,37 +234,6 @@ export default function Home({
               }}
             />
           </div>
-        </div>
-
-        <div style={{ paddingTop: 32, width: "95%", maxHeight: "600px", overflow: "scroll" }}>
-          <div style={{ display: "flex", flexDirection: "row", textAlign: "center" }}>
-            <span style={{ verticalAlign: "middle", paddingLeft: 5, fontSize: 36, width: "100%" }}>
-              <Text>
-                <a style={{ color: "#ddd" }} target={"_blank"} rel="noopener noreferrer">
-                  other executions
-                </a>
-              </Text>
-            </span>
-          </div>
-
-          <List
-            bordered
-            dataSource={executeTransactionEvents.filter(event => event["data"] != "0x00")}
-            renderItem={item => {
-              return (
-                <>
-                  <TransactionListItem
-                    item={item}
-                    mainnetProvider={mainnetProvider}
-                    blockExplorer={blockExplorer}
-                    price={price}
-                    readContracts={readContracts}
-                    walletContractName={walletContractName}
-                  />
-                </>
-              );
-            }}
-          />
         </div>
       </div>
     </div>

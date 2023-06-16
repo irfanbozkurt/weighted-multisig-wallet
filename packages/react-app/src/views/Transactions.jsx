@@ -304,16 +304,14 @@ export default function Transactions({
           }}
         >
           {/* Signature of function to be called */}
-          <div style={{ padding: 8, width: "100%" }}>
+          <div style={{ padding: 8, width: "100%", display: `${!createTxMethodNameDisabled && "none"}` }}>
             <Input
               style={{ width: "100%" }}
               type="text"
-              disabled={createTxMethodNameDisabled}
+              disabled={true}
               value={methodName}
               placeholder="Enter function signature"
-              onChange={e => {
-                setMethodName(e.target.value);
-              }}
+              onChange={e => setMethodName(e.target.value)}
             />
           </div>
 
@@ -368,7 +366,7 @@ export default function Transactions({
             <Input
               placeholder="calldata"
               disabled={dataDisabled}
-              value={data}
+              value={data == "0x" ? "" : data}
               onChange={e => {
                 setData(e.target.value);
               }}

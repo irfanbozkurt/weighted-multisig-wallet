@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, Route, Switch, useLocation } from "react-router-dom";
 import Web3Modal from "web3modal";
 import "./App.css";
-import { Account, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
+import { Account, Contract, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
 import { Transactor } from "./helpers";
 import {
   useBalance,
@@ -23,7 +23,7 @@ import {
 } from "./hooks";
 //import Hints from "./Hints";
 import { DAI_ABI, DAI_ADDRESS, INFURA_ID, NETWORK, NETWORKS } from "./constants";
-import { Transactions, Funds } from "./views";
+import { Funds, Transactions } from "./views";
 
 /*
     Welcome to 🏗 scaffold-eth !
@@ -132,7 +132,7 @@ function App(props) {
     console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
   });
 
-  let networkDisplay = "";
+  let networkDisplay;
   if (localChainId && selectedChainId && localChainId != selectedChainId) {
     networkDisplay = (
       <div style={{ zIndex: 2, position: "absolute", right: 0, top: 60, padding: 16 }}>
@@ -140,8 +140,8 @@ function App(props) {
           message={"⚠️ Wrong Network"}
           description={
             <div>
-              You have <b>{NETWORK(selectedChainId).name || selectedChainId}</b> selected and you need to be on{" "}
-              <b>{NETWORK(localChainId).name || localChainId}</b>.
+              You have <b>{(NETWORK(selectedChainId) && NETWORK(selectedChainId).name) || selectedChainId}</b> selected
+              and you need to be on <b>{(NETWORK(localChainId) && NETWORK(localChainId).name) || localChainId}</b>.
             </div>
           }
           type="error"
@@ -149,13 +149,12 @@ function App(props) {
         />
       </div>
     );
-  } else {
+  } else
     networkDisplay = (
       <div style={{ zIndex: -1, position: "absolute", right: 154, top: 28, padding: 16, color: targetNetwork.color }}>
         {targetNetwork.name}
       </div>
     );
-  }
 
   const quorumPerMillion = useContractReader(readContracts, walletContractName, "quorumPerMillion");
   if (DEBUG) console.log("✳️ quorumPerMillion:", quorumPerMillion);
@@ -322,6 +321,7 @@ function App(props) {
           <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
             <GasGauge gasPrice={gasPrice} />
           </Col>
+
           <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
             <Button
               onClick={() => {
@@ -335,19 +335,6 @@ function App(props) {
               </span>
               Support
             </Button>
-          </Col>
-        </Row>
-
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
-            {
-              /*  if the local provider has a signer, let's show the faucet:  */
-              faucetAvailable ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
-              ) : (
-                ""
-              )
-            }
           </Col>
         </Row>
       </div>

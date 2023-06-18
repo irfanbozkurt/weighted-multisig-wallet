@@ -271,7 +271,7 @@ export default function Transactions({
                           setAmount(0);
                           setCreateTxAmountDisabled(true);
 
-                          window.location.reload(true);
+                          window.location.reload();
                         }}
                       >
                         Propose Removal Of Executor

@@ -8,7 +8,7 @@ While anyone holding at least 1 gov token can create proposals, only the **execu
 
 Weighted MultiSig Wallet provides pre-configured UI interfaces for Wallet governance and payment calls, but users can craft custom calldata and propose entirely custom calls to any CA or EOA. Inputed 'to', 'value' and '\_calldata' will be **call{}()** ed by the wallet contract, given enough signature weight. Explore further all these interfaces in the online demo.
 
-### Demo on Sepolia : [weighted-multisig.surge.sh](https://weighted-multisig.surge.sh) (please switch to sepolia)
+### Demo : [weighted-multisig.surge.sh](https://weighted-multisig.surge.sh)
 
 <br>
 
